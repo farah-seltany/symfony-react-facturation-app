@@ -2,14 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource(
+ *     normalizationContext={
+ *
+ *     "groups"={"users_read"}
+ *      }
+ * )
+ * @UniqueEntity("email", message="This email already exists")
  */
 class User implements UserInterface
 {
@@ -17,37 +29,49 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="can not be null")
+     * @Assert\Email(message="Email must be valid")
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"users_read", "customers_read", "invoices_read"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="can not be null"))
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="can not be null"))
+     * @Assert\Length(min="3", max="255", minMessage="FirstName must be at least 3 characters and max 255 characters")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="can not be null"))
      */
     private $lastName;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user")
+     * @Groups({"users_read"})
      */
     private $customers;
 
