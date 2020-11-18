@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "method"="POST",
  *              "path"="/in_voices/{id}/increment",
  *              "controller"="App\Controller\InvoiceIncrementationController",
- *              "swagger_context"={
+ *              "openapi_context"={
  *                  "summary"="Increase an invoice chrono",
  *                  "description"="Increase an invoice chrono"
  *              }
