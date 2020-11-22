@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\InVoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,6 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     denormalizationContext={"disable_type_enforcement"=true}
  * )
  * @ApiFilter(OrderFilter::class)
+ * @ApiFilter(SearchFilter::class, properties={"customer.lastName":"partial", "status":"exact"})
  */
 class InVoice
 {
@@ -53,8 +55,7 @@ class InVoice
     /**
      * @ORM\Column(type="float")
      * @Groups({"invoices_read", "customers_read", "users_read", "invoices_subresource"})
-     * @Assert\NotBlank(message="can not be null")
-     * @Assert\Type(type="numeric", message="must be numeric")
+     * @Assert\Type(type="numeric", message="Le montant est obligatoire.")
      */
     private $amount;
 
@@ -69,7 +70,7 @@ class InVoice
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"invoices_read", "customers_read", "users_read", "invoices_subresource"})
-     * @Assert\NotBlank(message="can not be null")
+     * @Assert\NotBlank(message="Le statut est obligatoire.")
      * @Assert\Choice(choices={"SENT", "CANCELLED", "PAID"}, message="Status must be SENT, CANCELLED or PAID")
      */
     private $status;

@@ -39,10 +39,18 @@ class InvoiceChronoSubsriber implements EventSubscriberInterface {
             $user = $this->security->getUser();
 
             //Derniere facture chrono
-            $lastChrono = $this->repository->findLastChrono($user);
+            $invoicesLenght = $this->repository->getCount($user);
 
-            //Dernier chrono + 1
-            $result->setChrono($lastChrono + 1);
+            if ($invoicesLenght > 0) {
+                $lastChrono = $this->repository->findLastChrono($user);
+
+                //Dernier chrono + 1
+                $result->setChrono($lastChrono + 1);
+
+            } else {
+                $result->setChrono(1);
+            }
+
             if (empty($result->getSentAt())) {
                 $result->setSentAt(new \DateTime());
             }

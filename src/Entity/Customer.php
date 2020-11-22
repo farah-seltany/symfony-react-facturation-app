@@ -11,6 +11,7 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -25,9 +26,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     subresourceOperations={
  *          "in_voices_get_subresource"={"path"="/customers/{id}/invoices"}
  *     },
+ *     attributes={
+ *          "pagination_enabled"=true,
+ *          "pagination_items_per_page"=10
+ *     },
  * )
- * @ApiFilter(SearchFilter::class, properties={"firstName":"partial", "lastName":"partial", "company":"partial"})
+ * @ApiFilter(SearchFilter::class, properties={"firstName":"partial", "lastName":"partial", "email":"partial", "company":"partial"})
  * @ApiFilter(OrderFilter::class)
+ * @UniqueEntity("email", message="Un client avec cette adresse email existe déjà.")
  */
 class Customer
 {
@@ -42,26 +48,26 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read", "users_read"})
-     * @Assert\NotBlank(message="can not be null")
-     * @Assert\Length(min="3", minMessage="must be at least 3 characters")
+     * @Assert\Length(min="3", minMessage="Le prénom doit contenir entre 3 et 255 caractères.")
      * @Assert\Length(max="255", maxMessage="maximum length is 255")
+     * @Assert\NotBlank(message="Le prénom est obligatoire.")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read", "users_read"})
-     * @Assert\NotBlank(message="can not be null")
-     * @Assert\Length(min="3", minMessage="must be at least 3 characters")
-     * @Assert\Length(max="255", maxMessage="maximum length is 255")
+     * @Assert\Length(min="3", minMessage="Le nom doit contenir entre 3 et 255 caractères.")
+     * @Assert\Length(max="255", maxMessage="Le nom doit contenir entre 3 et 255 caractères.")
+     * @Assert\NotBlank(message="Le nom est obligatoire.")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read", "users_read"})
-     * @Assert\NotBlank(message="can not be null")
-     * @Assert\Email(message="Email is not valid")
+     * @Assert\Email(message="L'adresse email n'est pas valide.")
+     * @Assert\NotBlank(message="L'email est obligatoire.")
      */
     private $email;
 

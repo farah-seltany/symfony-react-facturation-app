@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "groups"={"users_read"}
  *      }
  * )
- * @UniqueEntity("email", message="This email already exists")
+ * @UniqueEntity("email", message="Un compte avec cette adresse email existe déjà.")
  */
 class User implements UserInterface
 {
@@ -36,8 +36,8 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
-     * @Assert\NotBlank(message="can not be null")
-     * @Assert\Email(message="Email must be valid")
+     * @Assert\Email(message="L'email n'est pas valide.")
+     * @Assert\NotBlank(message="L'email est obligatoire")
      */
     private $email;
 
@@ -50,21 +50,22 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="can not be null"))
+     * @Assert\NotBlank(message="Le mot de passe est obligatoire"))
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\Length(min="3", max="255", minMessage="Le prénom doit contenir entre 3 et 255 caractères")
      * @Assert\NotBlank(message="can not be null"))
-     * @Assert\Length(min="3", max="255", minMessage="FirstName must be at least 3 characters and max 255 characters")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"users_read", "customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\Length(min="3", max="255", minMessage="Le nom doit contenir entre 3 et 255 caractères")
      * @Assert\NotBlank(message="can not be null"))
      */
     private $lastName;

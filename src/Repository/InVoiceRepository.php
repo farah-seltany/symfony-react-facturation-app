@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Customer;
 use App\Entity\InVoice;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -30,6 +31,17 @@ class InVoiceRepository extends ServiceEntityRepository
                 ->setMaxResults(1)
                 ->getQuery()
                 ->getSingleScalarResult()
+            ;
+    }
+
+    public function getCount(User $user) {
+        return $this->createQueryBuilder('i')
+                    ->select('count(i.id)')
+                    ->join('i.customer', 'c')
+                    ->where('c.user = :user')
+                    ->setParameter('user', $user)
+                    ->getQuery()
+                    ->getSingleScalarResult()
             ;
     }
 
