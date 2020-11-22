@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jwtDecode from "jwt-decode";
-import {LOGIN_API} from "../config";
+import {LOGIN_API, USER_API} from "../config";
 
 
 function setAxiosToken (token) {
@@ -33,7 +33,7 @@ function register (user) {
     }
 
     return axios
-        .post(LOGIN_API, data)
+        .post(USER_API, data)
         .then(response => response.data)
 }
 
